@@ -1,5 +1,6 @@
 var personService = require('../service/PersonService');
-var PersonController = (function () {
+module.exports = {
+	var PersonController = (function () {
     function PersonController() {}; 
     PersonController.prototype.index = function () {
       return personService.find();
@@ -9,4 +10,5 @@ var PersonController = (function () {
     };
     //Mismo con delete, update, create, etc.
     return PersonController;
-})();
+	})();
+}
