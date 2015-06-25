@@ -1,13 +1,13 @@
 var PersonController = (function () {
-  var Person = require('../models/Person')
-  var PersonDao = require('../persistance/PersonDao');
-  var personDao = new PersonDao();
-  var Q = require("q");
+  var Person = require('../models/Person'),
+      PersonDao = require('../persistance/PersonDao'),
+      personDao = new PersonDao(),
+      PersonValidator = require('../validator/PersonValidator'),
+      Q = require("q");
   function PersonController() {
   };
   
   PersonController.prototype.index = function () {
-    var a = new Person({a: 1});
     return personDao.find({});
   };
 
@@ -27,15 +27,19 @@ var PersonController = (function () {
   };
 
   PersonController.prototype.create = function(person) {
-    var p = Q.defer()
-    var person = new Person(person);
+    var p = Q.defer(),
+        person = new Person(person),
+        personValidator = new PersonValidator();
+
     if (personValidator.isValid(person)) {
-      p.resolve(personDao.create(person));
+      p.resolve(personDao.insert(person));
     } else {
       p.reject("Error while creating Person: " + person + ", with errors: " + personValidator.errors);
     }
+
     return p.promise;
   };
+
   return PersonController;
 })();
 
