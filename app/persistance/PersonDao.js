@@ -1,28 +1,28 @@
-var connector = require('../connector/algunConector');
-module.exports = {
-  var PersonDao = (function () {
-    function PersonDao() {
-      var table = "Person"
-    }
-    
-    PersonDao.prototype.find = function (params) {
-      return connector.find(table, params);
-    };
+var PersonDao = (function () {
+  var Connector = require('../connector/MongoDB');
+  var connector = new Connector();
+  function PersonDao() {
+    this.table = "Person";
+  }
+  
+  PersonDao.prototype.find = function (params) {
+    return connector.find(this.table, params);
+  };
 
-    PersonDao.prototype.insert = function(person) {
-      return connector.insert(table, person);
-    };
+  PersonDao.prototype.insert = function(person) {
+    return connector.insert(this.table, person);
+  };
 
-    PersonDao.prototype.update = function(person) {
-      return.connector.update(table, person);
-    };
+  PersonDao.prototype.update = function(person) {
+    return connector.update(this.table, {id: person.id}, person);
+  };
 
-    PersonDao.prototype.delete = function(id) {
-      return.connector.delete(table, {id: id});
-    };
-    return PersonDao;
-  })();
-  return {PersonDao: PersonDao};
-}
+  PersonDao.prototype.delete = function(id) {
+    return connector.delete(this.table, {id: id});
+  };
 
-//Si es mongo, no hay que modificar mucho. Si es Mysql, crear la "query" Select from where.
+  return PersonDao;
+
+})();
+
+module.exports = PersonDao;

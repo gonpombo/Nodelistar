@@ -1,8 +1,9 @@
-var _ = require("lodash");
-module.exports = {
 	var Person = (function() {
+
+		var _ = require("lodash");
 		
 		function Person(data) {
+			data = data || {};
 			this.validate(data);
 			this.data = data;
 		};
@@ -12,6 +13,9 @@ module.exports = {
 		};
 
 		Person.prototype.validate = function(data) {
+			var data = _.omit(data, function(d) {
+				return !d
+			});
 			var mandatoryFiedls = JSON.stringify(this.mandatoryFiedls());
 			var personFields = JSON.stringify(_.intersection(this.mandatoryFiedls(), Object.keys(data)))
 			if (mandatoryFiedls !== personFields) {
@@ -21,6 +25,4 @@ module.exports = {
 
 		return Person;
 	})();
-
-	return {Person: Person}
-}
+module.exports = Person
