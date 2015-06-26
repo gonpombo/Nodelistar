@@ -1,12 +1,31 @@
 var PersonDao = (function () {
   var Connector = require('../connector/MongoDB');
   var connector = new Connector();
+  var _ = require("lodash");
+
   function PersonDao() {
     this.table = "Person";
   }
+
+  PersonDao.prototype.buildParams = function(params) {
+    var response = {};
+    _.each(params, function(val, key) {
+      switch(key) {
+        case "name":
+        case "lastname":
+          response[key] = val.toString();
+          break;
+        case "dni":
+        case "age":
+          response[key] = parseInt(val);
+          break;
+      }
+    });
+    return response;
+  }
   
   PersonDao.prototype.find = function (params) {
-    return connector.find(this.table, params);
+    return connector.find(this.table, this.buildParams(params));
   };
 
   PersonDao.prototype.insert = function(person) {

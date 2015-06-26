@@ -4,6 +4,7 @@ var PersonController = (function () {
       personDao = new PersonDao(),
       PersonValidator = require('../validator/PersonValidator'),
       Q = require("q");
+
   function PersonController() {
   };
   
@@ -11,10 +12,8 @@ var PersonController = (function () {
     return personDao.find({});
   };
 
-  PersonController.prototype.show = function (id) {
-    var p = Q.defer();
-    Number(id) ? p.resolve(personDao.find({id: Number(id)})) : p.reject("Not a valid id")
-    return p.promise;
+  PersonController.prototype.show = function (params) {
+    return personDao.find(params)
   };
 
   PersonController.prototype.delete = function(id) {

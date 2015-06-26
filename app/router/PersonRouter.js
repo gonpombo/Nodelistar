@@ -2,19 +2,13 @@ module.exports = function(app) {
   var PersonController = require('../controllers/PersonController');
   var personController = new PersonController();
   app
-    .all('/person/*', function(req, res, next) {
+    .route('/person')
+    .all(function(req, res, next) {
       // TODO Auth Method.
       next();
     })
-    .get('/person/:id?', function(req, res) {
-      var promise;
-      if(req.params.id) {
-        promise = personController.show(req.params.id);
-      } else {
-        promise = personController.index();
-      }
-
-      promise
+    .get(function(req, res) {
+      personController.show(req.query)
       	.then(function(data) {
       		res.send(data);
      		})
@@ -24,7 +18,7 @@ module.exports = function(app) {
         })
         .done()
     })
-    .post('/person', function(req, res) {
+    .post(function(req, res) {
       personController.create(req.body)
         .then(function(response) {
           res.send(response);
